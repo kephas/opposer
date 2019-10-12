@@ -32,10 +32,13 @@ adjustement = 7
 probability model =
     let opposer = toFloat model.opposer
         opposee = toFloat model.opposee
-        ratio = opposer / opposee
+        bigOpposer = opposer >= opposee
+        ratio = if bigOpposer then opposer / opposee else opposee/opposer
         adjustedRatio = (ratio - 1) * adjustement + 1
+        proba = 100 * adjustedRatio / (adjustedRatio + 1)
+        realProba = if bigOpposer then proba else 100 - proba
     in
-        String.fromInt (round <| 100 * adjustedRatio / (adjustedRatio + 1)) ++ "%"
+        String.fromInt (round realProba) ++ "%"
 
 init : () -> ( Model, Cmd Msg )
 init _ =
